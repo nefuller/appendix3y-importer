@@ -1,9 +1,9 @@
 import * as Hapi from '@hapi/hapi';
 import * as Jimp from 'jimp';
-import { initLogging, logger } from './Logger';
+import { initLogging, logger } from '../shared/Logger';
 import { json2csv } from 'json-2-csv';
 import fs from 'fs';
-import Appendix3YImporter from './Appendix3YImporter';
+import Appendix3YImporter from '../shared/Appendix3YImporter';
 
 const path = require('path');
 const tesseract = require('node-tesseract-ocr');
@@ -76,19 +76,25 @@ const init = async () => {
 
           let info: any = {};
           info.filename = file.hapi.filename;
+          console.log(info.filename);
 
           promises.push(new Promise((resolve, reject) => {
             Jimp.read('mask.png').then((mask) => {
               Jimp.read(file._data).then((image) => {
                 image.composite(mask, 0, 0, { mode: Jimp.BLEND_SOURCE_OVER, opacitySource: 1, opacityDest: 1 }).scale(IMAGE_SCALE_FACTOR, Jimp.RESIZE_BICUBIC).quality(100).grayscale().write(`./temp/file${i}.jpg`, async (image) => {
                     try {
-                      info = new Appendix3YImporter().getAppendix3YInfo(info, await tesseract.recognize(path.join(__dirname, `../../temp/file${i}.jpg`), {
+                      const temp = new Appendix3YImporter().getAppendix3YInfo(await tesseract.recognize(path.join(__dirname, `../../temp/file${i}.jpg`), {
                         load_system_dawg: 0,
                         lang: 'eng',
                         oem: 1,
                         psm: 4
                       }));
-      
+
+                      info = {
+                        ...info,
+                        ...temp
+                      }
+
                       resolve(info);
                     } catch (err) {
                       logger.error(err);

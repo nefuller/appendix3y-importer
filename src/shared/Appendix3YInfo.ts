@@ -1,3 +1,6 @@
+/*
+* Interface for Appendix 3Y information fields.
+*/
 export interface Appendix3YInfo {
   filename: string;
   entity: string;
