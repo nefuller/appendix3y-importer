@@ -23,7 +23,7 @@ const FORM_FIELD = {
 */
 export default class Appendix3YImporter {
   /*
-  * Extracts Appendix3YInfo data extracted from the input string.
+  * Extracts Appendix3YInfo data from the input string.
   *
   * @param data - the string to extract data from
   * @returns - an instance of Appendix3YInfo
