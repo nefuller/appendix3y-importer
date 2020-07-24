@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run build && mocha",
     "start-client": "webpack-dev-server --open -r dotenv/config",
     "start-server": "\"nodemon -r dotenv/config src/server/index.ts\"",
-    "start": "concurrently \"webpack-dev-server --open -r dotenv/config\" \"nodemon -r dotenv/config src/server/index.ts\"",
-    "build": "webpack"
+    "start": "concurrently \"npm run start-server\" \"npm run start-client\"",
+    "clean": "rimraf build",
+    "build": "npm run clean && webpack"
   },
   "keywords": [],
   "author": "",
