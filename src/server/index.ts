@@ -9,8 +9,14 @@ const path = require('path');
 const tesseract = require('node-tesseract-ocr');
 const rimraf = require('rimraf');
 
+// Quick and dirty limit on number of files allowed per request.
 const MAX_FILES_PER_REQUEST = 50;
+
+// The Appendix3Y example form used in this project is 96 DPI. Scaling the image by the following value simulates
+// an image at 300 DPI, which is the recommended DPI for Tesseract.
 const IMAGE_SCALE_FACTOR = 3.125;
+
+initLogging('appendix3y-importer.log');
 
 const init = async () => {
   const server = Hapi.server({
@@ -22,38 +28,6 @@ const init = async () => {
   });
 
   await server.register([require('@hapi/inert')])
-
-  server.route({
-    method: 'POST',
-    path: '/csv',
-    handler: async (request, h) => {
-      const payload = request.payload as any;
-
-      try {
-        await new Promise((resolve, reject) => {
-          json2csv(JSON.parse(payload), (err, csv) => {
-            if (err) {
-              reject(err);
-            } else {
-              fs.writeFile(path.join(__dirname, '../../temp/download.csv'), csv, function(err) {
-                if(err) {
-                  reject(err);
-                } else {
-                  resolve();
-                }
-              });   
-            }
-          });
-        });
-
-        return h.file('./temp/download.csv');
-      } catch (err) {
-        logger.error(err);
-
-        return 'An unexpected error occured on the server.'
-      }
-    }
-  });
 
   server.route({
     method: 'POST',
@@ -74,9 +48,11 @@ const init = async () => {
         if (payload[`file${i}`]) {
           const file = payload[`file${i}`];
 
+          // To prepare the user image for Tesseract, we apply our mask image, then resize and convert the resultant image to
+          // greyscale. Before passing it to Tesseract we also save it as a .jpg to remove the alpha channel.
+
           let info: any = {};
           info.filename = file.hapi.filename;
-          console.log(info.filename);
 
           promises.push(new Promise((resolve, reject) => {
             Jimp.read('mask.png').then((mask) => {
@@ -125,6 +101,40 @@ const init = async () => {
     }
   });
 
+  server.route({
+    method: 'POST',
+    path: '/csv',
+    handler: async (request, h) => {
+      const payload = request.payload as any;
+
+      // Generate a .csv file from the request payload, save it in a temporary location, then send it back to the client.
+      try {
+        await new Promise((resolve, reject) => {
+          json2csv(JSON.parse(payload), (err, csv) => {
+            if (err) {
+              reject(err);
+            } else {
+              fs.writeFile(path.join(__dirname, '../../temp/download.csv'), csv, function(err) {
+                if(err) {
+                  reject(err);
+                } else {
+                  resolve();
+                }
+              });   
+            }
+          });
+        });
+
+        return h.file('./temp/download.csv');
+      } catch (err) {
+        logger.error(err);
+
+        return 'An unexpected error occured on the server.'
+      }
+    }
+  });
+
+  // Nuke the temp folder to avoid cluttering up disk space.
   rimraf.sync(path.join(__dirname, '../../temp'));
 
   await server.start();
@@ -137,5 +147,4 @@ process.on('unhandledRejection', (err) => {
   process.exit(1);
 });
 
-initLogging('appendix3y-importer.log');
 init();
