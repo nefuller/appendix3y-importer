@@ -13,18 +13,29 @@ class ResultsTable extends React.Component<ResultsTableProps> {
   
   render() {
     return (
-      <div>
-        <table id="results">
-          <tbody>
-            {this.renderTableHeader()}
-            {this.renderTableData()}
-          </tbody>
-        </table>
+      <div id='results-container'>
+        <div id='results-header'>
+          <div id='results-header-panel'></div>
+          <div id='results-header-panel'>
+            <h2>Appendix3Y Data</h2>
+          </div>    
+          <div id='results-header-panel'>
+            <button disabled={this.props.data.length < 1} onClick={(event) => this.onGenerateCSVClick(event)}>Download CSV</button>
+          </div>
+        </div>  
+        <div>
+          <table id="results-table">
+            <tbody>
+              {this.renderHeader()}
+              {this.renderData()}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
 
-  renderTableHeader() {
+  renderHeader() {
     return (
       <tr>
         <th>ID</th>
@@ -48,7 +59,7 @@ class ResultsTable extends React.Component<ResultsTableProps> {
     );
   }
 
-  renderTableData() {
+  renderData() {
     let key = 0;
     return this.props.data.map((data) => {
       return (
@@ -72,6 +83,23 @@ class ResultsTable extends React.Component<ResultsTableProps> {
           <td>{data.error}</td>
         </tr>
       );
+    });
+  }
+
+  onGenerateCSVClick(event: React.MouseEvent) {
+    fetch('http://localhost:3000/csv', {
+      method: 'POST',
+      body: JSON.stringify(this.props.data)
+    }).then(async (response) => {
+      return await response.blob();
+    }).then((blob) => {
+      const hiddenElement = document.createElement('a');
+      hiddenElement.href = URL.createObjectURL(blob);
+      hiddenElement.target = '_blank';
+      hiddenElement.download = 'download.csv';
+      hiddenElement.click();
+    }).catch((err) => {
+      console.log(err);
     });
   }
 }

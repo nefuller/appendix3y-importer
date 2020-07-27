@@ -1,11 +1,23 @@
-/* Demo.css */
+#page-container {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  padding: 0% 0% 5% 5%;
+}
+
+#title-container {
+  color: white;
+  padding: 1% 1%;
+  text-align: center;
+  background-color: #4CAF50;
+}
 
 .file-drop {
   /* relatively position the container bc the contents are absolute */
   position: relative;
   height: 100px;
   width: 100%;
-
 }
 
 .file-drop > .file-drop-target {
@@ -64,43 +76,13 @@
   box-shadow: 0 0 13px 3px #ff6e40;
 }
 
-#file-drop-wrapper {
+#file-drop-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 1%;
 }
 
-#file-drop-wrapper h3 {
-  color: rgb(240, 52, 52);
+#file-drop-container h3 {
+  color: rgb(53, 99, 160);
 }
-
-#title {
-  color: 'black';
-  padding: 1% 1%;
-  text-align: center;
-}
-
-#results { 
-  text-align: center;
-  border: '1px solid black';
-  width: 600;
-  color: 'black';
-  padding: 20;
-  align-content: center;
-}
-
-#page {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  padding: 0% 0% 5% 5%;
-}
-
-#download-csv {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1% 2%;
-}
-
