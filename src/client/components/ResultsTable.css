@@ -1,24 +1,49 @@
-#results {
+#results-header {
+  background-color: rgb(89, 129, 89);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+#results-header-panel {
+  display: flex;
+  width: 10vw;
+  align-items: center;
+  justify-content: center;
+}
+
+#results-header-panel > button {
+  min-width: 5vw;
+  max-height: 80%;
+}
+
+#results-table {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
+  background-color: white;
+  color: black;
+  flex-direction: row;
+  text-align: center;
+  align-content: center;
 }
 
-#results td, #results th {
+#results-table td, #results th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#results tr:nth-child(even) { 
+#results-table tr:nth-child(even) { 
   background-color: #f2f2f2;
 }
 
-#results tr:hover {background-color: #ddd;}
+#results-table tr:hover {background-color: #ddd;}
 
-#results th {
+#results-table th {
   padding-top: 12px;
   padding-bottom: 12px;
-  text-align: left;
+  text-align: center;
   background-color: #4CAF50;
   color: white;
 }
+

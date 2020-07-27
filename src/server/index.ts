@@ -12,8 +12,8 @@ const rimraf = require('rimraf');
 // Quick and dirty limit on number of files allowed per request.
 const MAX_FILES_PER_REQUEST = 50;
 
-// The Appendix3Y example form used in this project is 96 DPI. Scaling the image by the following value simulates
-// an image at 300 DPI, which is the recommended DPI for Tesseract.
+// The Appendix3Y example form used in this project is 96 DPI. We scale the image to simulate
+// 300 DPI, which is the recommended DPI for Tesseract.
 const IMAGE_SCALE_FACTOR = 3.125;
 
 initLogging('appendix3y-importer.log');
@@ -107,7 +107,7 @@ const init = async () => {
     handler: async (request, h) => {
       const payload = request.payload as any;
 
-      // Generate a .csv file from the request payload, save it in a temporary location, then send it back to the client.
+      // Generate a .csv file from the request payload, save it in a temporary location, and send it back to the client.
       try {
         await new Promise((resolve, reject) => {
           json2csv(JSON.parse(payload), (err, csv) => {
@@ -134,7 +134,7 @@ const init = async () => {
     }
   });
 
-  // Nuke the temp folder to avoid cluttering up disk space.
+  // Nuke temp folder to avoid cluttering disk space.
   rimraf.sync(path.join(__dirname, '../../temp'));
 
   await server.start();
