@@ -28,12 +28,23 @@ module.exports = {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader']
       },
+      {   
+        test: /\.(png|jpg|gif)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+            },
+          },
+        ],     
+      }
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src', 'client', 'index.html'),
     }),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin()
   ],
 };
