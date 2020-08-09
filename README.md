@@ -3,6 +3,9 @@
 React/Typescript application that uses the Tesseract OCR Library to import data from Australian Stock Exchange Appendix 3Y: Change of Directors' Interest forms.
 
 ![alt text](https://github.com/nefuller/appendix3y-importer/blob/master/src/server/tests/test_data/appendix-3y-original.png?raw=true)
+
+## Example of Output
+
 ![alt text](https://github.com/nefuller/appendix3y-importer/blob/master/screenshot.png?raw=true)
 
 ## Setup
