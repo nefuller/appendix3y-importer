@@ -1,5 +1,5 @@
 {
-  "extension": ["ts"],
+  "extension": ["ts", "png"],
   "spec": "src/**/*-test.ts",
   "require": "ts-node/register"
 }
